@@ -1,0 +1,66 @@
+services:
+  db:
+    profiles: ["full"]
+    image: postgis/postgis:17-3.5
+    # The official PostGIS image is amd64-only; Docker Desktop can emulate it on Apple Silicon.
+    platform: linux/amd64
+    environment:
+      POSTGRES_DB: mysuru_after_hours
+      POSTGRES_USER: mysuru
+      POSTGRES_PASSWORD: mysuru-local
+    volumes:
+      - mysuru-db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 4s
+      retries: 20
+
+  backend:
+    profiles: ["full"]
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    environment:
+      POSTGRES_DB: mysuru_after_hours
+      POSTGRES_USER: mysuru
+      POSTGRES_PASSWORD: mysuru-local
+      POSTGRES_HOST: db
+      POSTGRES_PORT: 5432
+      DJANGO_DEBUG: "1"
+      DJANGO_ALLOWED_HOSTS: "127.0.0.1,localhost,backend"
+      DJANGO_CSRF_TRUSTED_ORIGINS: "http://127.0.0.1:5173,http://localhost:5173"
+    command: >-
+      sh -c "python manage.py makemigrations mysuru_game --noinput &&
+      python manage.py migrate &&
+      (python manage.py import_mysuru_osm || echo 'OSM import unavailable; using the local road fallback') &&
+      python manage.py runserver 0.0.0.0:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/auth/', timeout=2)"]
+      interval: 5s
+      timeout: 4s
+      retries: 60
+      start_period: 30s
+
+  web:
+    profiles: ["full"]
+    image: node:22-alpine
+    working_dir: /app
+    environment:
+      VITE_BACKEND_URL: http://backend:8000
+    volumes:
+      - .:/app
+      - node-modules:/app/node_modules
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
+    ports:
+      - "5173:5173"
+    depends_on:
+      backend:
+        condition: service_healthy
+
+volumes:
+  mysuru-db:
+  node-modules:

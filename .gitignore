@@ -1,0 +1,15 @@
+node_modules/
+dist/
+.env
+.venv/
+__pycache__/
+*.py[cod]
+db.sqlite3
+.DS_Store
+node_modules/
+dist/
+geospatial/.venv/
+backend/.venv/
+*.zip
+.DS_Store
+tsconfig.tsbuildinfo

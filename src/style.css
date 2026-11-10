@@ -1,0 +1,1429 @@
+:root {
+  font-family: 'DM Sans', sans-serif;
+  color: #202c28;
+  background: #13111c;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  --paper: #f4f2e9;
+  --ink: #202c28;
+  --line: #dfded4;
+  --forest: #1e493e;
+  --amber: #f5a623;
+  --amber-hover: #ffc04d;
+  --dark-bg: #13111c;
+  --daari-bg: #121324;
+}
+
+* { box-sizing: border-box; }
+html, body, #app { width: 100%; height: 100%; margin: 0; }
+body { overflow: hidden; }
+button, input { font: inherit; }
+button { color: inherit; }
+
+/* ==========================================================================
+   1. NAMMA MYSURU LANDING PAGE (TRANSPARENT HERO + TRAILER + FOOTER)
+   ========================================================================== */
+.intro-screen {
+  position: fixed;
+  z-index: 30;
+  inset: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: var(--dark-bg);
+  color: #fffaf0;
+  scroll-behavior: smooth;
+  transition: opacity 0.65s ease, visibility 0.65s ease;
+}
+.intro-screen.leaving { opacity: 0; visibility: hidden; pointer-events: none; }
+.intro-screen.closed { display: none; }
+
+/* Full-Viewport Transparent Hero so your Mysuru Palace BG shines through */
+.namma-hero {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: clamp(20px, 3vw, 36px) clamp(24px, 5vw, 72px) 28px;
+  isolation: isolate;
+}
+.intro-photo {
+  position: absolute;
+  z-index: -2;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 40%;
+  filter: contrast(1.04) brightness(0.92);
+}
+/* Subtle bottom-left vignette only so the palace image stays completely clear */
+.intro-shade {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background:
+    radial-gradient(circle at 22% 72%, rgba(12, 14, 24, 0.72) 0%, rgba(12, 14, 24, 0.22) 48%, transparent 75%),
+    linear-gradient(180deg, rgba(12, 14, 24, 0.38) 0%, transparent 24%, transparent 76%, #13111c 100%);
+}
+
+/* Top Floating Nav (Matches Screenshot 2) */
+.namma-topnav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+}
+.topnav-left { display: flex; align-items: center; gap: 8px; }
+.ost-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 13px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(18, 19, 36, 0.55);
+  backdrop-filter: blur(8px);
+  color: #fffaf0;
+  font: 600 11px 'DM Mono', monospace;
+  cursor: pointer;
+}
+.ost-skip {
+  width: 33px;
+  height: 33px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(18, 19, 36, 0.55);
+  color: var(--amber);
+  cursor: pointer;
+}
+.eq-bars { display: inline-flex; align-items: flex-end; gap: 2px; height: 11px; }
+.eq-bars i { width: 2.5px; height: 4px; background: var(--amber); border-radius: 1px; }
+.ost-pill.playing .eq-bars i:nth-child(1) { animation: eq-b 0.5s ease-in-out infinite alternate; }
+.ost-pill.playing .eq-bars i:nth-child(2) { animation: eq-b 0.35s ease-in-out 0.15s infinite alternate; }
+.ost-pill.playing .eq-bars i:nth-child(3) { animation: eq-b 0.6s ease-in-out 0.25s infinite alternate; }
+@keyframes eq-b { 0% { height: 3px; } 100% { height: 11px; } }
+
+.topnav-links {
+  display: flex;
+  align-items: center;
+  gap: clamp(16px, 2.2vw, 30px);
+}
+.topnav-links a {
+  color: #f4f1ea;
+  text-decoration: none;
+  font: 500 14px 'DM Sans', sans-serif;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
+  transition: color 0.18s;
+}
+.topnav-links a:hover { color: var(--amber); }
+.nav-play-btn {
+  border: 0;
+  background: var(--amber);
+  color: #16131d;
+  font: 700 13px 'DM Sans', sans-serif;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+}
+.nav-play-btn:hover { background: var(--amber-hover); }
+
+/* Stylized NAMMA MYSURU Badge (Matches NAMMA BENGLOORU Logo) */
+.namma-hero-content {
+  margin-top: auto;
+  margin-bottom: 18px;
+  max-width: 680px;
+}
+.namma-logo-badge {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 18px 14px;
+  background: #17151f;
+  border: 3px solid #2b2638;
+  border-radius: 18px;
+  transform: rotate(-2.5deg);
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.55);
+  margin-bottom: 22px;
+}
+.namma-logo-badge.small {
+  transform: rotate(-2deg) scale(0.76);
+  transform-origin: left top;
+  margin-bottom: 6px;
+}
+.logo-petals {
+  position: absolute;
+  top: -14px;
+  right: 16px;
+  display: flex;
+  gap: 3px;
+}
+.logo-petals i {
+  width: 16px;
+  height: 22px;
+  background: #ef4444;
+  border-radius: 50% 50% 0 50%;
+  transform: rotate(-18deg);
+  border: 2px solid #17151f;
+}
+.logo-petals b {
+  width: 14px;
+  height: 14px;
+  background: #22c55e;
+  border-radius: 50% 0 50% 50%;
+  margin-top: 8px;
+  border: 2px solid #17151f;
+}
+.logo-line-1 {
+  font: 800 38px/0.92 'Fredoka', 'Space Grotesk', sans-serif;
+  color: #fff8eb;
+  letter-spacing: 1px;
+  text-shadow: 0 3px 0 #17151f;
+}
+.logo-line-2 {
+  font: 800 42px/0.92 'Fredoka', 'Space Grotesk', sans-serif;
+  color: #fff8eb;
+  letter-spacing: 0.5px;
+}
+.logo-road-swoosh {
+  width: 100%;
+  height: 8px;
+  margin-top: 4px;
+  border-radius: 99px;
+  background: repeating-linear-gradient(90deg, var(--amber) 0 14px, #17151f 14px 20px);
+}
+
+.namma-hero-headline {
+  margin: 0 0 24px;
+  font: 400 clamp(34px, 4.4vw, 56px)/1.03 'Anton', 'Space Grotesk', sans-serif;
+  letter-spacing: 0.5px;
+  color: #ffffff;
+  text-transform: uppercase;
+  text-shadow: 0 6px 28px rgba(0, 0, 0, 0.7);
+}
+.underline-brush {
+  position: relative;
+  display: inline-block;
+}
+.underline-brush::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -4px;
+  height: 5px;
+  border-radius: 4px;
+  background: var(--amber);
+}
+
+.namma-hero-ctas {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+.btn-play-free {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  border: 0;
+  border-radius: 9px;
+  padding: 13px 20px;
+  background: var(--amber);
+  color: #18141f;
+  font: 700 14px 'DM Sans', sans-serif;
+  cursor: pointer;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.4);
+  transition: transform 0.16s, background 0.16s;
+}
+.btn-play-free:hover { background: var(--amber-hover); transform: translateY(-1px); }
+.btn-play-free kbd {
+  padding: 3px 7px;
+  border-radius: 5px;
+  background: rgba(0, 0, 0, 0.14);
+  font: 600 10px 'DM Mono', monospace;
+}
+.btn-vote-full, .btn-open-daari {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 9px;
+  padding: 13px 20px;
+  background: rgba(25, 24, 38, 0.65);
+  backdrop-filter: blur(10px);
+  color: #fffaf0;
+  font: 600 14px 'DM Sans', sans-serif;
+  cursor: pointer;
+  transition: background 0.16s, border-color 0.16s;
+}
+.btn-vote-full:hover, .btn-open-daari:hover {
+  background: rgba(40, 38, 58, 0.85);
+  border-color: var(--amber);
+}
+
+.namma-hero-specs {
+  margin: 16px 0 0;
+  color: rgba(255, 250, 240, 0.82);
+  font: 500 12px 'DM Sans', sans-serif;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+}
+
+.scroll-cue {
+  position: absolute;
+  left: 50%;
+  bottom: 18px;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  color: rgba(255, 255, 255, 0.65);
+  text-decoration: none;
+  font: 500 9px 'DM Mono', monospace;
+  letter-spacing: 2px;
+}
+.scroll-cue i {
+  width: 1px;
+  height: 24px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.6), transparent);
+}
+
+.ingame-footage-pill {
+  position: absolute;
+  right: clamp(24px, 5vw, 72px);
+  bottom: 26px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 12px;
+  border-radius: 99px;
+  background: rgba(16, 17, 30, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  font: 600 9px 'DM Mono', monospace;
+  letter-spacing: 0.8px;
+}
+.footage-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--amber);
+}
+
+/* ==========================================================================
+   2. "EIGHTY-NINE SECONDS OF MYSURU" TRAILER SECTION (Matches Screenshot 4)
+   ========================================================================== */
+.namma-section {
+  padding: clamp(56px, 8vw, 96px) clamp(24px, 5vw, 72px);
+  background: var(--dark-bg);
+}
+.namma-container {
+  max-width: 1120px;
+  margin: 0 auto;
+}
+.condensed-display-title {
+  margin: 0 0 14px;
+  font: 400 clamp(44px, 6.2vw, 78px)/0.95 'Anton', 'Space Grotesk', sans-serif;
+  text-transform: uppercase;
+  color: #fffaf0;
+  letter-spacing: 0.5px;
+}
+.condensed-display-title span {
+  color: var(--amber);
+}
+.section-lead {
+  margin: 0 0 36px;
+  max-width: 540px;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #c8c4d4;
+}
+.section-lead strong { color: #ffffff; }
+
+.inline-video-player {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #1b1926;
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.inline-video-player video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.video-fallback-stage {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.video-fallback-stage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  animation: kenburns 14s ease-in-out infinite alternate;
+}
+@keyframes kenburns {
+  0% { transform: scale(1.02); }
+  100% { transform: scale(1.1) translate(-1%, -1%); }
+}
+.video-fallback-vignette {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(16,15,24,0.2) 0%, rgba(16,15,24,0.82) 100%);
+}
+.video-scene-caption {
+  position: absolute;
+  left: 32px;
+  bottom: 64px;
+  max-width: 520px;
+}
+.scene-pill {
+  display: inline-block;
+  padding: 4px 9px;
+  border-radius: 4px;
+  background: var(--amber);
+  color: #16131d;
+  font: 700 9px 'DM Mono', monospace;
+  letter-spacing: 0.8px;
+}
+.video-scene-caption h3 {
+  margin: 10px 0 6px;
+  font: 700 28px 'Space Grotesk', sans-serif;
+  color: #fffaf0;
+}
+.video-scene-caption p {
+  margin: 0;
+  font-size: 14px;
+  color: #dedae8;
+}
+.video-center-play {
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  transform: translate(-50%, -50%);
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+  background: rgba(19, 17, 28, 0.72);
+  color: var(--amber);
+  font-size: 24px;
+  cursor: pointer;
+  transition: transform 0.18s, background 0.18s;
+}
+.video-center-play:hover { transform: translate(-50%, -50%) scale(1.08); background: #13111c; }
+.video-center-play.hidden { opacity: 0; pointer-events: none; }
+
+.video-control-bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 46px;
+  padding: 0 16px;
+  background: rgba(12, 11, 19, 0.86);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.vc-btn {
+  border: 0;
+  background: transparent;
+  color: #ffffff;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 4px 6px;
+}
+.vc-time {
+  font: 500 11px 'DM Mono', monospace;
+  color: #d6d3e0;
+}
+.vc-timeline {
+  flex: 1;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.22);
+  border-radius: 99px;
+  cursor: pointer;
+  overflow: hidden;
+}
+.vc-progress {
+  height: 100%;
+  background: var(--amber);
+}
+
+/* City Cards & How-to Strip */
+.section-split-head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 20px;
+}
+.mysuru-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+.mysuru-spot-card {
+  border-radius: 12px;
+  overflow: hidden;
+  background: #1b1928;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  transition: transform 0.2s, border-color 0.2s;
+}
+.mysuru-spot-card:hover { transform: translateY(-4px); border-color: var(--amber); }
+.mysuru-spot-card img { width: 100%; height: 190px; object-fit: cover; display: block; }
+.spot-card-body { padding: 18px; }
+.spot-card-body small { color: var(--amber); font: 600 9px 'DM Mono', monospace; letter-spacing: 0.8px; }
+.spot-card-body h3 { margin: 8px 0 6px; font: 700 19px 'Space Grotesk', sans-serif; color: #fffaf0; }
+.spot-card-body p { margin: 0; font-size: 13px; line-height: 1.55; color: #b9b5c7; }
+
+.howto-strip {
+  margin-top: 32px;
+  padding: 18px 22px;
+  border-radius: 12px;
+  background: #1b1928;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 16px;
+}
+.howto-item { display: flex; align-items: center; gap: 6px; font-size: 13px; color: #d6d2e2; }
+.howto-item kbd {
+  padding: 4px 8px;
+  border-radius: 5px;
+  background: #2a273b;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: var(--amber);
+  font: 600 11px 'DM Mono', monospace;
+}
+
+/* ==========================================================================
+   3. PRE-FOOTER BANNER & MULTI-COLUMN FOOTER (Matches Screenshot 3)
+   ========================================================================== */
+.namma-prefooter {
+  position: relative;
+  padding: 54px clamp(24px, 5vw, 72px);
+  background: #1a1520;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 2px solid #e11d48;
+  overflow: hidden;
+}
+.prefooter-inner {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 32px;
+}
+.social-pills-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+.social-pill {
+  padding: 8px 14px;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: #fffaf0;
+  text-decoration: none;
+  font: 600 12px 'DM Sans', sans-serif;
+}
+.social-pill:hover { background: rgba(255, 255, 255, 0.18); }
+.prefooter-question {
+  margin: 0 0 16px;
+  font: 700 15px 'DM Sans', sans-serif;
+  color: #ffffff;
+}
+.prefooter-right {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+}
+.rajyotsava-frame {
+  position: relative;
+  width: 270px;
+  height: 120px;
+  padding: 6px;
+}
+.rajyotsava-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 6px;
+}
+.corner-br {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-color: #ffffff;
+  border-style: solid;
+}
+.corner-br.tl { top: 0; left: 0; border-width: 2px 0 0 2px; }
+.corner-br.tr { top: 0; right: 0; border-width: 2px 2px 0 0; }
+.corner-br.bl { bottom: 0; left: 0; border-width: 0 0 2px 2px; }
+.corner-br.br { bottom: 0; right: 0; border-width: 0 2px 2px 0; }
+.kannada-greeting {
+  color: var(--amber);
+  font: 700 16px 'Noto Sans Kannada', sans-serif;
+}
+.kannada-sub {
+  color: #b7b2c4;
+  font-size: 12px;
+}
+
+.namma-footer {
+  padding: 56px clamp(24px, 5vw, 72px) 42px;
+  background: #13111c;
+  color: #a9a4b8;
+}
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1.3fr;
+  gap: 32px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.footer-brand-col p {
+  margin: 0;
+  max-width: 300px;
+  font-size: 13px;
+  line-height: 1.65;
+  color: #a9a4b8;
+}
+.footer-brand-col strong { color: #e2dfec; font-weight: 600; }
+.footer-links-col {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 12px;
+}
+.footer-links-col a {
+  color: #e4e1ed;
+  text-decoration: none;
+  font-size: 13.5px;
+  font-weight: 500;
+}
+.footer-links-col a:hover { color: var(--amber); }
+.footer-eyebrow {
+  display: block;
+  font: 600 10px 'DM Mono', monospace;
+  letter-spacing: 1.2px;
+  color: #8f8a9f;
+  margin-bottom: 14px;
+}
+.footer-social-squares {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+.footer-social-squares a {
+  width: 36px;
+  height: 36px;
+  border-radius: 7px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.04);
+  color: #ffffff;
+  text-decoration: none;
+  display: grid;
+  place-items: center;
+  font-size: 14px;
+}
+.footer-social-squares a:hover { border-color: var(--amber); color: var(--amber); }
+.footer-contact-line {
+  margin: 8px 0;
+  font-size: 12.5px;
+}
+.footer-contact-line a { color: #ffffff; text-decoration: underline; }
+.footer-legal {
+  padding-top: 24px;
+  font-size: 11.5px;
+  line-height: 1.7;
+  color: #787387;
+}
+.footer-legal p { margin: 4px 0; }
+.footer-legal a { color: #9d98ad; }
+
+/* ==========================================================================
+   4. SCREENSHOT 1: "DAARI" DARK-MODE INTERACTIVE MYSURU MAP MODAL
+   ========================================================================== */
+.daari-modal-backdrop {
+  padding: 18px;
+  background: rgba(10, 11, 20, 0.86);
+  backdrop-filter: blur(8px);
+}
+.daari-shell {
+  width: min(1360px, 96vw);
+  height: min(840px, 92vh);
+  background: #171829;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 32px 110px rgba(0, 0, 0, 0.85);
+}
+.daari-top-bar {
+  height: 42px;
+  padding: 0 20px;
+  background: #131424;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+}
+.daari-top-objective {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: #a9adc2;
+}
+.daari-slash { color: var(--amber); font-weight: 800; font-size: 18px; }
+.daari-body {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 1fr 290px;
+}
+.daari-map-canvas {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: var(--daari-bg);
+  overflow: hidden;
+  cursor: grab;
+  user-select: none;
+}
+.daari-map-canvas:active { cursor: grabbing; }
+.daari-svg { width: 100%; height: 100%; display: block; }
+
+/* DAARI Road & Landmark Vector Colors (Matches Screenshot 1) */
+.daari-park-zone { fill: #193836; opacity: 0.78; }
+.daari-water-poly { fill: #1d6b75; stroke: #2aa1af; stroke-width: 1; }
+.daari-road-local { fill: none; stroke: #45496a; stroke-width: 1.25; stroke-linecap: round; }
+.daari-road-secondary { fill: none; stroke: #62678f; stroke-width: 2.1; stroke-linecap: round; }
+.daari-road-major { fill: none; stroke: #f2e2ba; stroke-width: 3.4; stroke-linecap: round; }
+.daari-route-glow { fill: none; stroke: rgba(245, 158, 11, 0.32); stroke-width: 9; stroke-linecap: round; }
+.daari-route-line { fill: none; stroke: #f59e0b; stroke-width: 4; stroke-linecap: round; }
+
+.daari-poi { cursor: pointer; }
+.daari-poi:hover circle:first-child { r: 8.5px; }
+.daari-poi-text {
+  fill: #e2e4f0;
+  font: 600 10.5px 'DM Sans', sans-serif;
+  paint-order: stroke;
+  stroke: #121324;
+  stroke-width: 3.5px;
+}
+.daari-landmark-text {
+  fill: #fff8e7;
+  font: 400 13px 'Anton', 'Space Grotesk', sans-serif;
+  letter-spacing: 0.5px;
+  paint-order: stroke;
+  stroke: #121324;
+  stroke-width: 4px;
+}
+.daari-objective-sub {
+  fill: #f59e0b;
+  font: 700 10px 'DM Sans', sans-serif;
+  paint-order: stroke;
+  stroke: #121324;
+  stroke-width: 3px;
+}
+.daari-locked-title {
+  fill: #9499b3;
+  font: 700 11px 'Space Grotesk', sans-serif;
+  letter-spacing: 0.7px;
+  paint-order: stroke;
+  stroke: #121324;
+  stroke-width: 3.5px;
+}
+.daari-locked-sub {
+  fill: #6c718c;
+  font: 500 9.5px 'DM Sans', sans-serif;
+}
+.daari-player-pulse {
+  fill: rgba(56, 189, 248, 0.28);
+  animation: map-pulse 1.8s ease-out infinite;
+}
+
+.daari-scale-bar {
+  position: absolute;
+  top: 16px;
+  left: 18px;
+  display: grid;
+  gap: 4px;
+  color: #cfd2e3;
+  font: 600 10px 'DM Mono', monospace;
+  pointer-events: none;
+}
+.daari-scale-bar i {
+  width: 68px;
+  height: 3px;
+  background: #ffffff;
+  border-left: 2px solid #ffffff;
+  border-right: 2px solid #ffffff;
+}
+.daari-places-pill {
+  position: absolute;
+  top: 16px;
+  right: 18px;
+  padding: 6px 12px;
+  border-radius: 99px;
+  background: rgba(19, 20, 36, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #d5d8e8;
+  font: 700 11px 'Space Grotesk', sans-serif;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.places-dot { width: 7px; height: 7px; border-radius: 50%; background: #2dd4bf; }
+.daari-places-pill b { color: var(--amber); font-size: 13px; }
+
+.daari-zoom-controls {
+  position: absolute;
+  right: 16px;
+  bottom: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.daari-zoom-controls button {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(19, 20, 36, 0.9);
+  color: #ffffff;
+  font-size: 16px;
+  cursor: pointer;
+}
+.daari-zoom-controls button:hover { border-color: var(--amber); color: var(--amber); }
+.daari-osm-credit {
+  position: absolute;
+  left: 14px;
+  bottom: 12px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background: rgba(15, 16, 28, 0.8);
+  color: #8c90a8;
+  font: 500 9px 'DM Sans', sans-serif;
+}
+
+/* DAARI Right Sidebar */
+.daari-sidebar {
+  background: #181926;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 20px 20px 16px;
+  color: #e2e4f0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow-y: auto;
+}
+.daari-wallet-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.daari-brand {
+  color: #38bdf8;
+  font: 400 22px 'Anton', 'Space Grotesk', sans-serif;
+  letter-spacing: 1px;
+}
+.daari-divider-slash {
+  color: #8b5cf6;
+  font-size: 32px;
+  font-weight: 300;
+}
+.daari-wallet { text-align: right; }
+.daari-wallet small {
+  display: block;
+  font: 600 9px 'DM Mono', monospace;
+  color: #7c8098;
+  letter-spacing: 1px;
+}
+.daari-wallet strong {
+  font: 400 28px 'Anton', 'Space Grotesk', sans-serif;
+  color: #9499b3;
+}
+.daari-zone-header h2 {
+  margin: 12px 0 2px;
+  font: 400 32px/0.98 'Anton', 'Space Grotesk', sans-serif;
+  color: #ffffff;
+  letter-spacing: 0.6px;
+}
+.daari-zone-header p {
+  margin: 0 0 14px;
+  color: var(--amber);
+  font: 700 15px 'Noto Sans Kannada', sans-serif;
+}
+.daari-legend-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 9px 10px;
+  padding: 12px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 11.5px;
+  color: #c3c6d9;
+}
+.legend-item { display: flex; align-items: center; gap: 7px; }
+.lg-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+  flex: 0 0 10px;
+}
+.lg-line { width: 14px; height: 3.5px; background: #f59e0b; border-radius: 2px; }
+.lg-you { color: #ffffff; font-size: 11px; }
+
+.daari-selected-info {
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  display: grid;
+  gap: 2px;
+  margin: 10px 0;
+}
+.daari-selected-info small { font: 600 8px 'DM Mono', monospace; color: var(--amber); }
+.daari-selected-info strong { font-size: 12px; color: #ffffff; }
+.daari-selected-info span { font-size: 10.5px; color: #9499b3; }
+
+.daari-instructions {
+  font-size: 11px;
+  color: #9499b3;
+  display: grid;
+  gap: 4px;
+}
+.daari-instructions p { margin: 0; }
+.daari-close-btn {
+  margin-top: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.06);
+  color: #ffffff;
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 11px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.daari-close-btn kbd {
+  background: #ffffff;
+  color: #121324;
+  padding: 1px 5px;
+  border-radius: 3px;
+  font: 700 10px 'DM Mono', monospace;
+}
+
+/* ==========================================================================
+   5. IN-GAME 3D STAGE & SIDEBAR HUD (PRESERVED)
+   ========================================================================== */
+.app-shell { width: 100%; height: 100%; min-height: 620px; background: var(--paper); }
+.topbar { height: 74px; padding: 0 28px 0 24px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); background: #f8f7f1; position: relative; z-index: 5; }
+.brand { color: var(--ink); text-decoration: none; display: inline-flex; align-items: center; gap: 10px; }
+.brand-mark { height: 37px; width: 37px; display: grid; place-items: center; border-radius: 12px 12px 12px 4px; background: var(--forest); color: #f7d38b; font: 700 22px 'Space Grotesk', sans-serif; }
+.brand-copy { display: grid; line-height: 1; gap: 4px; }
+.brand-copy strong { font: 700 13px 'Space Grotesk', sans-serif; letter-spacing: 1.1px; }
+.brand-copy small { font: 500 8px 'DM Mono', monospace; color: #81897f; letter-spacing: 1.6px; }
+.chapter-tag { font: 500 10px 'DM Mono', monospace; letter-spacing: 1px; color: #6f7870; display: flex; align-items: center; gap: 8px; }
+.live-dot, .map-live, .zone-dot, .mini-pulse { border-radius: 50%; background: #68a67d; box-shadow: 0 0 0 3px #e3eee2; display: inline-block; width: 7px; height: 7px; }
+.topbar-right { display: flex; align-items: center; gap: 21px; }
+.weather { display: grid; grid-template-columns: 22px auto; align-items: center; column-gap: 6px; }
+.weather-icon { color: #d19b3d; font-size: 17px; grid-row: span 2; }
+.weather #weather-temp { font: 600 13px 'DM Mono', monospace; }
+.weather small { color: #92988e; font: 500 7px 'DM Mono', monospace; }
+.profile-button { border: 1px solid #dfdfd5; background: #fbfaf5; border-radius: 9px; height: 39px; display: flex; gap: 9px; align-items: center; padding: 4px 11px 4px 5px; font-weight: 600; font-size: 11px; cursor: pointer; }
+.avatar { width: 28px; height: 28px; display: grid; place-items: center; border-radius: 7px; background: #e6bb6b; color: #33483b; font: 700 12px 'Space Grotesk', sans-serif; }
+
+.workspace { display: flex; height: calc(100% - 74px); }
+.rail { width: 72px; background: #eeece2; border-right: 1px solid #dfddd2; display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 18px 0 15px; flex: 0 0 72px; }
+.rail-group, .rail-bottom { display: flex; flex-direction: column; align-items: center; gap: 9px; }
+.rail-item { width: 54px; height: 55px; border: 0; border-radius: 9px; background: transparent; color: #8a9087; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 3px; cursor: pointer; }
+.rail-item.selected, .rail-item:hover { background: #dce5d9; color: var(--forest); }
+.rail-item small { font: 500 7px 'DM Mono', monospace; }
+.rail-seal { margin-top: 12px; color: #a2a293; border-top: 1px solid #d7d5ca; padding-top: 14px; font: 9px/1.4 'Noto Sans Kannada', sans-serif; text-align: center; }
+
+.main-area { flex: 1; min-width: 0; display: grid; grid-template-columns: minmax(480px, 1fr) 368px; }
+.game-column { min-width: 0; display: flex; flex-direction: column; padding: 18px 18px 12px 20px; }
+.stage { position: relative; flex: 1; min-height: 360px; border-radius: 14px; overflow: hidden; background: #bfc9c4; isolation: isolate; }
+#game-canvas { width: 100%; height: 100%; display: block; outline: none; }
+.stage-shade { pointer-events: none; position: absolute; inset: 0; background: linear-gradient(180deg, #24332d41 0%, transparent 21%, transparent 67%, #101d1a65 100%); }
+.stage-top { z-index: 2; position: absolute; left: 17px; right: 17px; top: 17px; display: flex; align-items: center; justify-content: space-between; pointer-events: none; }
+.zone-chip, .sound-button { pointer-events: auto; height: 34px; background: #f8f5eced; border-radius: 7px; display: flex; align-items: center; gap: 8px; padding: 0 11px; color: #4a5b50; font: 500 9px 'DM Mono', monospace; border: 0; cursor: pointer; }
+.sound-button.music-on { background: #e5c87c; color: #344b3e; }
+.scene-caption { position: absolute; z-index: 2; left: 19px; bottom: 89px; display: flex; align-items: center; gap: 9px; color: white; pointer-events: none; }
+.caption-line { height: 29px; width: 2px; background: #eeb44e; }
+.scene-caption small { font: 500 8px 'DM Mono', monospace; display: block; }
+.scene-caption strong { font: 700 13px 'Space Grotesk', sans-serif; }
+.stage-bottom { position: absolute; z-index: 2; bottom: 0; left: 0; right: 0; min-height: 68px; padding: 12px 17px; display: flex; align-items: center; justify-content: space-between; color: #fff; }
+.objective { display: flex; align-items: center; gap: 10px; }
+.objective-icon { width: 31px; height: 31px; display: grid; place-items: center; color: #f3c361; border: 1px solid #ffffff54; border-radius: 50%; }
+.objective small { font: 500 7px 'DM Mono', monospace; display: block; }
+.objective strong { font: 600 11px 'DM Sans', sans-serif; }
+.objective button { border: 0; color: white; background: #ffffff1f; width: 27px; height: 27px; border-radius: 50%; cursor: pointer; }
+.speedometer { display: grid; grid-template-columns: 35px 36px; align-items: center; text-align: right; border-left: 1px solid #ffffff4a; padding-left: 13px; }
+.speed-label, .speed-unit { font: 500 6px 'DM Mono', monospace; }
+.speedometer strong { grid-column: 2; grid-row: 1/3; font: 500 27px 'DM Mono', monospace; }
+.stage-loader { position: absolute; z-index: 4; inset: 0; background: #e7e4d9; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 9px; transition: opacity .6s ease; }
+.stage-loader.gone { opacity: 0; pointer-events: none; }
+.loader-mark { width: 46px; height: 46px; display: grid; place-items: center; border-radius: 15px 15px 15px 5px; background: var(--forest); color: #f8d38b; font: 700 25px 'Space Grotesk', sans-serif; }
+.stage-toast { position: absolute; z-index: 5; top: 64px; left: 50%; transform: translate(-50%,-8px); opacity: 0; pointer-events: none; background: #203e35ee; color: #f8f4e8; padding: 10px 16px; border-radius: 8px; font-size: 11px; transition: .24s ease; }
+.stage-toast.visible { opacity: 1; transform: translate(-50%,0); }
+.under-stage { display: flex; align-items: center; justify-content: space-between; min-height: 42px; font-size: 10px; color: #7c8177; }
+.world-meta { display: flex; gap: 7px; align-items: center; font: 500 7px 'DM Mono', monospace; }
+.mobile-controls { display: none; }
+.vehicle-toggle { position: absolute; z-index: 3; right: 18px; bottom: 82px; display: flex; align-items: center; gap: 9px; border: 1px solid #ffffff9c; border-radius: 6px; padding: 8px 10px; color: #fdf7e9; background: #203b32d9; cursor: pointer; font: 500 7px 'DM Mono',monospace; }
+
+.briefing { background: #f8f7f1; border-left: 1px solid var(--line); padding: 25px 24px 14px; overflow-y: auto; display: flex; flex-direction: column; }
+.briefing-head { display: flex; justify-content: space-between; }
+.eyebrow { color: #92958a; font: 500 8px 'DM Mono', monospace; letter-spacing: 1px; }
+.briefing h1 { color: var(--forest); font: 700 32px/1.01 'Space Grotesk', sans-serif; margin: 8px 0 0; }
+.save-indicator { border: 1px solid #e0e2d8; border-radius: 5px; padding: 6px 8px; background: #f4f3eb; font: 500 7px 'DM Mono', monospace; }
+.intro { color: #737c72; font-size: 10px; line-height: 1.65; margin: 9px 0 14px; }
+.map-card { border: 1px solid #e1e0d6; border-radius: 8px; overflow: hidden; background: #f3f1e9; }
+.map-card-top { display: flex; align-items: center; justify-content: space-between; height: 28px; padding: 0 10px; background: #f7f6ef; }
+.map-label { color: #7f887e; font: 500 7px 'DM Mono', monospace; display: flex; align-items: center; gap: 7px; }
+.mini-map-wrap { position: relative; aspect-ratio: 942 / 819; }
+.map-reference { width: 100%; height: 100%; object-fit: contain; display: block; }
+.map-hotspots { position: absolute; inset: 0; }
+.map-hotspot { position: absolute; width: 12%; aspect-ratio: 1; border: 0; border-radius: 50%; background: transparent; cursor: pointer; }
+.map-hotspot[data-place="palace"] { left: 53.1%; top: 44%; }
+.map-hotspot[data-place="cathedral"] { left: 55.7%; top: 30.2%; }
+.map-hotspot[data-place="chamundi"] { left: 66.2%; top: 75.7%; }
+.map-route-label { position: absolute; left: 11px; bottom: 10px; padding: 6px 8px; border-radius: 5px; background: #fffdf2ed; font: 500 7px 'DM Mono', monospace; }
+.map-legend { height: 29px; display: flex; align-items: center; gap: 13px; padding: 0 10px; background: #f8f7f1; font: 500 7px 'DM Mono', monospace; }
+.map-legend button { margin-left: auto; border: 0; background: transparent; color: var(--forest); font: 600 7px 'DM Mono', monospace; cursor: pointer; }
+.mission-card { margin-top: 14px; border: 1px solid #e0dfd4; background: #f2f0e7; border-radius: 8px; padding: 13px 14px 12px; }
+.mission-head { display: flex; justify-content: space-between; }
+.reward { color: #94682f; background: #f0dfb8; border-radius: 4px; padding: 5px 7px; font: 600 8px 'DM Mono', monospace; }
+.mission-card h2 { color: var(--forest); margin: 9px 0 5px; font: 600 19px/1.1 'Space Grotesk', sans-serif; }
+.mission-card p { margin: 0; color: #737a70; font-size: 9px; line-height: 1.55; }
+.mission-meta { display: flex; justify-content: space-between; border-top: 1px solid #deddd2; border-bottom: 1px solid #deddd2; padding: 8px 0; margin: 10px 0; font: 500 7px 'DM Mono', monospace; }
+.mission-actions { display: flex; gap: 7px; }
+.primary-button { flex: 1; display: flex; align-items: center; justify-content: space-between; background: var(--forest); color: #f9f4e8; border: 0; border-radius: 6px; min-height: 37px; padding: 0 12px; font: 600 9px 'DM Mono', monospace; cursor: pointer; }
+.next-job { border: 1px solid #d8d9ce; background: #f8f7f0; width: 37px; border-radius: 6px; cursor: pointer; }
+.earnings-row { min-height: 52px; display: flex; align-items: center; gap: 9px; border-bottom: 1px solid #e3e1d7; margin-top: 8px; }
+.earnings-icon { border-radius: 50%; width: 28px; height: 28px; display: grid; place-items: center; background: #e9eadf; font: 600 12px 'DM Mono', monospace; }
+.controls-note { display: flex; align-items: center; gap: 4px; padding: 10px 0 7px; font: 500 6px 'DM Mono', monospace; }
+.keyboard-key, .controls-note kbd { padding: 2px 5px; border: 1px solid #deddd2; background: #f6f5ef; border-radius: 3px; }
+.side-footer { margin-top: auto; padding-top: 8px; display: flex; justify-content: space-between; font: 500 6px 'DM Mono', monospace; color: #999; }
+
+.modal-backdrop { position: fixed; z-index: 80; inset: 0; display: grid; place-items: center; opacity: 0; pointer-events: none; transition: opacity .2s; }
+.modal-backdrop.open { opacity: 1; pointer-events: auto; }
+.account-dialog { position: relative; width: min(385px, 92vw); background: #f8f7f1; border-radius: 12px; padding: 28px 30px 23px; }
+.close-button { position: absolute; right: 16px; top: 16px; border: 1px solid #e2e0d5; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; }
+.toast { position: fixed; z-index: 95; left: 50%; bottom: 22px; transform: translate(-50%, 8px); opacity: 0; pointer-events: none; background: #181926; border: 1px solid var(--amber); color: #fffaf0; padding: 11px 18px; border-radius: 8px; font-size: 12px; transition: .2s; }
+.toast.visible { opacity: 1; transform: translate(-50%, 0); }
+
+@media (max-width: 920px) {
+  .daari-body { grid-template-columns: 1fr; }
+  .daari-sidebar { display: none; }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+  .topnav-links a { display: none; }
+}
+/* ==========================================================================
+   SCREENSHOT 1: BENGLOORU-STYLE FULLSCREEN ILLUSTRATED LOADER (0% -> 100%)
+   ========================================================================== */
+.benglooru-loader {
+  position: fixed;
+  z-index: 25;
+  inset: 0;
+  background: #11121d;
+  color: #fffaf0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: clamp(28px, 4vw, 56px);
+  isolation: isolate;
+  transition: opacity 0.6s ease, visibility 0.6s ease;
+}
+.benglooru-loader.gone {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+.loader-bg-art {
+  position: absolute;
+  z-index: -3;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: contrast(1.08) brightness(0.68) saturate(1.15);
+}
+.loader-rain-overlay {
+  position: absolute;
+  z-index: -2;
+  inset: 0;
+  opacity: 0.18;
+  background: repeating-linear-gradient(105deg, transparent 0 38px, #d8ecff 39px 40px, transparent 41px 80px);
+  animation: rain 0.9s linear infinite;
+}
+.loader-vignette {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(12,13,22,0.3) 0%, rgba(12,13,22,0.15) 45%, rgba(12,13,22,0.92) 100%);
+}
+.loader-content {
+  width: 100%;
+  max-width: 1360px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 62vh;
+}
+.loader-logo {
+  align-self: flex-start;
+}
+.loader-bottom-bar {
+  width: 100%;
+}
+.loader-flavor-text {
+  margin: 0 0 18px;
+  font: 500 18px 'DM Sans', sans-serif;
+  color: #f4f1ea;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+}
+.loader-progress-track {
+  position: relative;
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.16);
+  border-radius: 99px;
+}
+.loader-progress-fill {
+  position: relative;
+  height: 100%;
+  background: var(--amber);
+  border-radius: 99px;
+  transition: width 0.28s ease;
+}
+.loader-bus-icon {
+  position: absolute;
+  right: -10px;
+  top: -24px;
+  font-size: 16px;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.8));
+}
+.loader-meta-row {
+  margin-top: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.loader-zone-label {
+  font: 500 13px 'DM Sans', sans-serif;
+  color: #9da2b8;
+}
+.loader-percent {
+  font: 400 38px/1 'Anton', 'Space Grotesk', sans-serif;
+  color: #ffffff;
+  letter-spacing: 0.5px;
+}
+
+/* ==========================================================================
+   SCREENSHOT 2: FULL-BLEED 3D STREET VIEW & FLOATING GTA/BENGLOORU HUD
+   ========================================================================== */
+.app-shell {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: #121320;
+}
+#game-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  outline: none;
+}
+
+/* Top-Left "/ Get on the scooter" */
+.hud-top-left {
+  position: absolute;
+  z-index: 6;
+  top: 22px;
+  left: 24px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  background: rgba(16, 18, 28, 0.52);
+  backdrop-filter: blur(6px);
+  color: #ffffff;
+  font: 700 17px 'DM Sans', sans-serif;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.7);
+}
+.hud-slash {
+  color: var(--amber);
+  font-weight: 900;
+  font-size: 22px;
+}
+
+/* Top-Right WALLET + F1 Keys / Esc Menu */
+.hud-top-right {
+  position: absolute;
+  z-index: 6;
+  top: 20px;
+  right: 22px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+.hud-wallet-box {
+  min-width: 145px;
+  padding: 10px 16px;
+  border-radius: 10px;
+  background: rgba(18, 20, 32, 0.78);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.12);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.wallet-slash {
+  color: var(--amber);
+  font-size: 36px;
+  font-weight: 300;
+  line-height: 1;
+}
+.wallet-stack { text-align: right; }
+.wallet-stack small {
+  display: block;
+  font: 700 10px 'DM Mono', monospace;
+  color: #a0a5bd;
+  letter-spacing: 1px;
+}
+.wallet-stack strong {
+  font: 400 32px/1.05 'Anton', 'Space Grotesk', sans-serif;
+  color: #ffffff;
+}
+.hud-shortcut-bar {
+  display: flex;
+  gap: 6px;
+}
+.hud-key-btn {
+  padding: 5px 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(18, 20, 32, 0.78);
+  color: #d6d9e8;
+  font: 600 11px 'DM Sans', sans-serif;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.hud-key-btn kbd {
+  padding: 1px 5px;
+  border-radius: 3px;
+  background: #ffffff;
+  color: #121320;
+  font: 700 9.5px 'DM Mono', monospace;
+}
+
+/* Center-Bottom Player Feet Chevron ("▼ 20 m") */
+.hud-feet-marker {
+  position: absolute;
+  z-index: 5;
+  left: 50%;
+  bottom: 23%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: none;
+}
+.feet-chevron {
+  color: var(--amber);
+  font-size: 26px;
+  line-height: 1;
+  text-shadow: 0 3px 10px rgba(0,0,0,0.85);
+  transition: transform 0.1s linear;
+}
+.feet-distance {
+  margin-top: 2px;
+  padding: 2px 7px;
+  border-radius: 4px;
+  background: rgba(14, 15, 24, 0.75);
+  color: #ffffff;
+  font: 700 12px 'DM Sans', sans-serif;
+}
+
+/* Bottom-Left DAARI Mini-Map Radar + Health Bar */
+.hud-bottom-left {
+  position: absolute;
+  z-index: 6;
+  left: 22px;
+  bottom: 20px;
+  width: 214px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.daari-minimap-card {
+  position: relative;
+  width: 214px;
+  height: 214px;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 2px solid rgba(255, 255, 255, 0.22);
+  background: #141526;
+  box-shadow: 0 12px 34px rgba(0,0,0,0.65);
+  cursor: pointer;
+}
+.minimap-title {
+  position: absolute;
+  top: 10px;
+  left: 12px;
+  z-index: 2;
+  font: 400 20px 'Anton', 'Space Grotesk', sans-serif;
+  color: #7dd3fc;
+  letter-spacing: 0.8px;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.9);
+}
+#daari-radar-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.minimap-bottom-row {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  pointer-events: none;
+}
+.minimap-left-icons {
+  display: flex;
+  gap: 4px;
+}
+.mm-north, .mm-icon {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: rgba(18, 19, 36, 0.88);
+  border: 1px solid rgba(255,255,255,0.25);
+  color: #ffffff;
+  font: 700 9px 'DM Mono', monospace;
+  display: grid;
+  place-items: center;
+}
+.minimap-target-dist {
+  padding: 2px 8px;
+  border-radius: 99px;
+  background: rgba(18, 19, 36, 0.9);
+  color: #ffffff;
+  font: 700 10px 'DM Sans', sans-serif;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.mm-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--amber);
+}
+
+.hud-health-bar {
+  height: 26px;
+  padding: 0 10px;
+  border-radius: 8px;
+  background: rgba(18, 20, 32, 0.82);
+  border: 1px solid rgba(255,255,255,0.14);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.health-heart { color: #4ade80; font-size: 12px; }
+.health-track {
+  flex: 1;
+  height: 6px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 99px;
+  overflow: hidden;
+}
+.health-fill { height: 100%; background: #4ade80; border-radius: 99px; }
+.health-num { color: #ffffff; font: 700 11px 'DM Sans', sans-serif; }
+
+/* Slide-Over Pause/Jobs Drawer */
+.briefing-drawer {
+  position: absolute;
+  z-index: 15;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(380px, 90vw);
+  background: #f8f7f1;
+  border-left: 1px solid var(--line);
+  padding: 26px 24px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  transform: translateX(102%);
+  transition: transform 0.26s ease;
+  box-shadow: -18px 0 50px rgba(0,0,0,0.45);
+}
+.briefing-drawer.open { transform: translateX(0); }
+.drawer-Footer-actions { display: flex; gap: 8px; margin-top: 8px; }
+
+.hud-osm-attribution {
+  position: absolute;
+  z-index: 6;
+  right: 18px;
+  bottom: 12px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: rgba(15, 16, 26, 0.72);
+  color: #a9adc2;
+  font: 500 9.5px 'DM Mono', monospace;
+  display: flex;
+  gap: 6px;
+}
+.hud-osm-attribution a { color: #e2e4f0; text-decoration: none; }
+.hud-osm-attribution a:hover { color: var(--amber); }
+/* Lock play buttons and show not-allowed cursor when map deployment is gated */
+.btn-play-free,
+.nav-play-btn {
+  cursor: not-allowed !important;
+  opacity: 0.85;
+}
+.btn-play-free:hover,
+.nav-play-btn:hover {
+  transform: none !important;
+  background: var(--amber) !important;
+}
