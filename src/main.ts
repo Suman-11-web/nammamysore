@@ -854,9 +854,9 @@ function applyMapTransform() {
 }
 
 function redrawDaariMap() {
-  const svg = document.getElementById('city-map-svg') as unknown as SVGSVGElement | null;
+  const svg = document.getElementById('city-map-svg') as unknown as Element | null;
   if (!svg) return;
-  renderDaariMysuruMap(svg, localMapFeatures, currentPlayerGps, customWaypointGps, (id, name, sub) => {
+  renderDaariMysuruMap(svg as unknown as SVGSVGElement, localMapFeatures, currentPlayerGps, customWaypointGps, (id, name, sub) => {
     if (!progress.discovered.includes(id)) {
       progress.discovered.push(id);
       saveProgress();
@@ -884,16 +884,18 @@ async function loadCityMap() {
 }
 
 function bindDaariMapInteractions() {
-  const canvas = byId('daari-map-canvas');
-  const svg = byId<SVGSVGElement>('city-map-svg' as string);
+  const mapCanvas = document.getElementById('daari-map-canvas');
+  const citySvg = document.getElementById('city-map-svg') as unknown as SVGSVGElement | null;
+  if (!mapCanvas || !citySvg) return;
+
   let dragging = false;
   let dragMoved = false;
   let startX = 0;
   let startY = 0;
 
-  canvas.addEventListener(
+  mapCanvas.addEventListener(
     'wheel',
-    (e) => {
+    (e: WheelEvent) => {
       e.preventDefault();
       const factor = e.deltaY < 0 ? 1.18 : 0.85;
       mapZoom = Math.max(0.85, Math.min(5.5, mapZoom * factor));
@@ -902,7 +904,7 @@ function bindDaariMapInteractions() {
     { passive: false }
   );
 
-  canvas.addEventListener('pointerdown', (e) => {
+  mapCanvas.addEventListener('pointerdown', (e: PointerEvent) => {
     if (e.button !== 0 || (e.target as HTMLElement).closest('.daari-zoom-controls')) return;
     dragging = true;
     dragMoved = false;
@@ -910,7 +912,7 @@ function bindDaariMapInteractions() {
     startY = e.clientY - mapPan.y;
   });
 
-  window.addEventListener('pointermove', (e) => {
+  window.addEventListener('pointermove', (e: PointerEvent) => {
     if (!dragging) return;
     if (Math.hypot(e.clientX - startX - mapPan.x, e.clientY - startY - mapPan.y) > 5) dragMoved = true;
     mapPan.x = e.clientX - startX;
@@ -918,11 +920,11 @@ function bindDaariMapInteractions() {
     applyMapTransform();
   });
 
-  window.addEventListener('pointerup', (e) => {
+  window.addEventListener('pointerup', (e: PointerEvent) => {
     if (!dragging) return;
     dragging = false;
     if (!dragMoved && e.button === 0 && !(e.target as HTMLElement).closest('.daari-poi, .daari-zoom-controls')) {
-      const rect = svg.getBoundingClientRect();
+      const rect = citySvg.getBoundingClientRect();
       const rawX = ((e.clientX - rect.left) / rect.width) * 1000;
       const rawY = ((e.clientY - rect.top) / rect.height) * 760;
       const mapX = (rawX - 500 - mapPan.x) / mapZoom + 500;
@@ -933,7 +935,7 @@ function bindDaariMapInteractions() {
     }
   });
 
-  canvas.addEventListener('contextmenu', (e) => {
+  mapCanvas.addEventListener('contextmenu', (e: MouseEvent) => {
     e.preventDefault();
     customWaypointGps = null;
     redrawDaariMap();
