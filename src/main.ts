@@ -540,7 +540,7 @@ app.innerHTML = `
   </div>`;
 
 const byId = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
-const maybeById = <T extends HTMLElement>(id: string) => document.getElementById(id) as T | null;
+const maybeById = <T extends Element>(id: string) => document.getElementById(id) as T | null;
 
 const appToast = (message: string) => {
   const el = byId('app-toast');
