@@ -239,7 +239,7 @@ app.innerHTML = `
       <div class="namma-container prefooter-inner">
         <div class="prefooter-left">
           <div class="social-pills-row">
-            <a href="https://instagram.com/__suman._.007" target="_blank" rel="noreferrer" class="social-pill">◎ Instagram</a>
+            <a href="https://instagram.com/#" target="_blank" rel="noreferrer" class="social-pill">◎ Instagram</a>
             <a href="#section-trailer" class="social-pill">▶ YouTube</a>
             <a href="https://github.com/Suman-11-web" target="_blank" rel="noreferrer" class="social-pill">𝕏 X</a>
             <a href="https://thesuman.in" target="_blank" rel="noreferrer" class="social-pill">@ Threads</a>
@@ -305,9 +305,9 @@ app.innerHTML = `
           <div class="footer-follow-col">
             <span class="footer-eyebrow">FOLLOW THE CITY</span>
             <div class="footer-social-squares">
-              <a href="https://instagram.com/__suman._.007" target="_blank" rel="noreferrer" aria-label="Instagram">◎</a>
+              <a href="https://instagram.com/#" target="_blank" rel="noreferrer" aria-label="Instagram">◎</a>
               <a href="#section-trailer" aria-label="YouTube">▶</a>
-              <a href="https://github.com/Suman-11-web" target="_blank" rel="noreferrer" aria-label="X / GitHub">𝕏</a>
+              <a href="https://github.com/" target="_blank" rel="noreferrer" aria-label="X / GitHub">𝕏</a>
               <a href="https://thesuman.in" target="_blank" rel="noreferrer" aria-label="Threads">@</a>
               <a href="https://thesuman.in" target="_blank" rel="noreferrer" aria-label="Facebook">f</a>
             </div>
