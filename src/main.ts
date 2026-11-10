@@ -112,9 +112,9 @@ app.innerHTML = `
 
         <div class="namma-hero-ctas">
           <button class="btn-play-free" id="enter-city" data-trigger="enter-game">
-  <span>Coming Soon</span>
-  <kbd>LOCKED</kbd>
-</button>
+            <span>Coming Soon</span>
+            <kbd>LOCKED</kbd>
+          </button>
           <button class="btn-vote-full" id="hero-vote-btn">
             <span>🗳 Vote for the full version</span>
           </button>
@@ -168,9 +168,9 @@ app.innerHTML = `
 
           <div class="video-control-bar">
             <button class="vc-btn" id="vc-play-toggle" aria-label="Play or pause trailer">▶</button>
-            <span class="vc-time" id="vc-time">0:08 / 1:29</span>
+            <span class="vc-time" id="vc-time">0:00 / 1:29</span>
             <div class="vc-timeline" id="vc-timeline">
-              <div class="vc-progress" id="vc-progress" style="width: 12%"></div>
+              <div class="vc-progress" id="vc-progress" style="width: 0%"></div>
             </div>
             <button class="vc-btn" id="vc-sound-toggle" title="Toggle soundtrack">🔊</button>
             <button class="vc-btn" id="vc-fullscreen" title="Fullscreen">⛶</button>
@@ -239,7 +239,7 @@ app.innerHTML = `
       <div class="namma-container prefooter-inner">
         <div class="prefooter-left">
           <div class="social-pills-row">
-            <a href="https://instagram.com/#" target="_blank" rel="noreferrer" class="social-pill">◎ Instagram</a>
+            <a href="https://www.instagram.com/_namma_mysore" target="_blank" rel="noreferrer" class="social-pill">◎ Instagram</a>
             <a href="#section-trailer" class="social-pill">▶ YouTube</a>
             <a href="https://github.com/Suman-11-web" target="_blank" rel="noreferrer" class="social-pill">𝕏 X</a>
             <a href="https://thesuman.in" target="_blank" rel="noreferrer" class="social-pill">@ Threads</a>
@@ -305,9 +305,9 @@ app.innerHTML = `
           <div class="footer-follow-col">
             <span class="footer-eyebrow">FOLLOW THE CITY</span>
             <div class="footer-social-squares">
-              <a href="https://instagram.com/#" target="_blank" rel="noreferrer" aria-label="Instagram">◎</a>
+              <a href="https://www.instagram.com/_namma_mysore" target="_blank" rel="noreferrer" aria-label="Instagram">◎</a>
               <a href="#section-trailer" aria-label="YouTube">▶</a>
-              <a href="https://github.com/" target="_blank" rel="noreferrer" aria-label="X / GitHub">𝕏</a>
+              <a href="https://github.com/#" target="_blank" rel="noreferrer" aria-label="X / GitHub">𝕏</a>
               <a href="https://thesuman.in" target="_blank" rel="noreferrer" aria-label="Threads">@</a>
               <a href="https://thesuman.in" target="_blank" rel="noreferrer" aria-label="Facebook">f</a>
             </div>
@@ -407,7 +407,7 @@ app.innerHTML = `
         </div>
       </div>
 
-      <div class="hud-health-bar">
+      <div class="health-bar">
         <span class="health-heart">♥</span>
         <div class="health-track"><div class="health-fill" style="width: 100%"></div></div>
         <strong class="health-num">100</strong>
@@ -416,9 +416,6 @@ app.innerHTML = `
 
     <!-- Context Action Prompt ("Press E to get in auto") -->
     <button class="vehicle-toggle" id="vehicle-toggle">GET ON SCOOTER / AUTO <kbd>E</kbd></button>
-
-    <!-- Bottom-Right Mandatory OpenStreetMap Attribution & Renderer Status -->
-    
 
     <div class="stage-toast" id="stage-toast" aria-live="polite"></div>
 
@@ -681,7 +678,95 @@ class MysuruMusicEngine {
 const musicEngine = new MysuruMusicEngine(byId<HTMLAudioElement>('city-music'));
 
 /* ============================================================================
- * LIVE BOTTOM-LEFT "DAARI" MINI-MAP RADAR RENDERER (Matches Screenshot 2!)
+ * TRAILER VIDEO PLAYER WIDGET CONTROLS
+ * ============================================================================ */
+function initTrailerPlayer() {
+  const video = maybeById<HTMLVideoElement>('custom-trailer-video');
+  const fallbackStage = maybeById<HTMLElement>('video-fallback-stage');
+  const centerPlayBtn = maybeById<HTMLButtonElement>('video-center-play');
+  const playToggleBtn = maybeById<HTMLButtonElement>('vc-play-toggle');
+  const progressBar = maybeById<HTMLElement>('vc-progress');
+  const timeLabel = maybeById<HTMLElement>('vc-time');
+  const soundToggle = maybeById<HTMLButtonElement>('vc-sound-toggle');
+  const fullscreenBtn = maybeById<HTMLButtonElement>('vc-fullscreen');
+  const playerContainer = maybeById<HTMLElement>('inline-video-player');
+
+  if (!video || !fallbackStage) return;
+
+  let isVideoPlaying = false;
+
+  const togglePlay = () => {
+    if (isVideoPlaying) {
+      video.pause();
+    } else {
+      musicEngine.pause();
+      fallbackStage.style.opacity = '0';
+      fallbackStage.style.pointerEvents = 'none';
+      void video.play().catch(() => {
+        appToast('Trailer file (trailer.mp4) missing in public/assets/');
+      });
+      isVideoPlaying = true;
+      if (playToggleBtn) playToggleBtn.textContent = '❚❚';
+    }
+  };
+
+  video.addEventListener('play', () => {
+    isVideoPlaying = true;
+    fallbackStage.style.opacity = '0';
+    fallbackStage.style.pointerEvents = 'none';
+    if (playToggleBtn) playToggleBtn.textContent = '❚❚';
+  });
+
+  video.addEventListener('pause', () => {
+    isVideoPlaying = false;
+    if (playToggleBtn) playToggleBtn.textContent = '▶';
+  });
+
+  video.addEventListener('timeupdate', () => {
+    if (video.duration) {
+      const pct = (video.currentTime / video.duration) * 100;
+      if (progressBar) progressBar.style.width = `${pct}%`;
+      const curMin = Math.floor(video.currentTime / 60);
+      const curSec = Math.floor(video.currentTime % 60);
+      const durMin = Math.floor(video.duration / 60);
+      const durSec = Math.floor(video.duration % 60);
+      if (timeLabel) {
+        timeLabel.textContent = `${curMin}:${String(curSec).padStart(2, '0')} / ${durMin}:${String(durSec).padStart(2, '0')}`;
+      }
+    }
+  });
+
+  video.addEventListener('ended', () => {
+    isVideoPlaying = false;
+    fallbackStage.style.opacity = '1';
+    fallbackStage.style.pointerEvents = 'auto';
+    if (playToggleBtn) playToggleBtn.textContent = '▶';
+  });
+
+  if (centerPlayBtn) centerPlayBtn.addEventListener('click', togglePlay);
+  if (playToggleBtn) playToggleBtn.addEventListener('click', togglePlay);
+  fallbackStage.addEventListener('click', togglePlay);
+
+  if (soundToggle) {
+    soundToggle.addEventListener('click', () => {
+      video.muted = !video.muted;
+      soundToggle.textContent = video.muted ? '🔇' : '🔊';
+    });
+  }
+
+  if (fullscreenBtn && playerContainer) {
+    fullscreenBtn.addEventListener('click', () => {
+      if (!document.fullscreenElement) {
+        void playerContainer.requestFullscreen().catch(() => undefined);
+      } else {
+        void document.exitFullscreen().catch(() => undefined);
+      }
+    });
+  }
+}
+
+/* ============================================================================
+ * LIVE BOTTOM-LEFT "DAARI" MINI-MAP RADAR RENDERER
  * ============================================================================ */
 function drawMiniMapRadar(status: WorldStatus) {
   const radar = maybeById<HTMLCanvasElement>('daari-radar-canvas');
@@ -694,12 +779,11 @@ function drawMiniMapRadar(status: WorldStatus) {
   ctx.fillStyle = '#141526';
   ctx.fillRect(0, 0, w, h);
 
-  const scale = 0.65; // meters to pixels
+  const scale = 0.65;
   ctx.save();
   ctx.translate(w / 2, h / 2);
 
   if (loadedRealMap) {
-    // 1. Real nearby building footprints on the mini-map
     ctx.fillStyle = '#292c47';
     for (const b of loadedRealMap.buildings) {
       const dx = b.centroid[0] - status.playerX;
@@ -716,7 +800,6 @@ function drawMiniMapRadar(status: WorldStatus) {
       ctx.fill();
     }
 
-    // 2. Real nearby roads on the mini-map
     for (const r of loadedRealMap.roads) {
       ctx.strokeStyle = r.isMajor ? '#f3dfa8' : '#53587d';
       ctx.lineWidth = r.isMajor ? 5.5 : 2.6;
@@ -733,23 +816,6 @@ function drawMiniMapRadar(status: WorldStatus) {
     }
   }
 
-  // 3. Nearby shop/vehicle dots
-  const dots: Array<[number, number, string]> = [
-    [-25, 35, '#4ade80'],
-    [18, -28, '#a855f7'],
-    [-40, -15, '#22c55e'],
-  ];
-  for (const [dx, dy, color] of dots) {
-    ctx.fillStyle = color;
-    ctx.beginPath();
-    ctx.arc(dx, dy, 4.5, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.strokeStyle = '#ffffff';
-    ctx.lineWidth = 1.5;
-    ctx.stroke();
-  }
-
-  // 4. Player center directional triangle
   ctx.rotate(status.playerYaw);
   ctx.fillStyle = '#ffffff';
   ctx.beginPath();
@@ -913,17 +979,6 @@ function drawProgress() {
 
 function saveProgress() {
   localStorage.setItem('mysuru-after-hours-save', JSON.stringify(progress));
-  fetch('/api/csrf/', { credentials: 'same-origin' })
-    .then(() => {
-      const csrf = document.cookie.split('; ').find((item) => item.startsWith('csrftoken='))?.split('=')[1] ?? '';
-      return fetch('/api/progress/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrf },
-        credentials: 'same-origin',
-        body: JSON.stringify(progress),
-      });
-    })
-    .catch(() => undefined);
 }
 
 async function loadProgress() {
@@ -964,27 +1019,6 @@ function drawHUD(status: WorldStatus) {
         : 'WALK TO SCOOTER <kbd>E</kbd>';
 
   drawMiniMapRadar(status);
-
-  const marker = document.querySelector<SVGGElement>('#player-map-dot');
-  if (marker) {
-    const point = gpsToSvgPixel(status.lon, status.lat);
-    marker.setAttribute('transform', `translate(${point.x.toFixed(1)} ${point.y.toFixed(1)})`);
-  }
-
-  if (activeMission && activeMissionId && status.distanceToDestination < 35) {
-    const mission = missions.find((item) => item.id === activeMissionId)!;
-    activeMission = false;
-    if (!progress.completed.includes(mission.id)) {
-      progress.completed.push(mission.id);
-      progress.cash += mission.reward;
-      progress.active = '';
-      activeMissionId = null;
-      world?.setMission(false);
-      saveProgress();
-      drawProgress();
-      toastInScene(`JOB DONE! “ತುಂಬಾ ಧನ್ಯವಾದ!” +₹${mission.reward}`);
-    }
-  }
 }
 
 const LOADER_FLAVOR_LINES = [
@@ -1021,8 +1055,6 @@ async function boot3DWorld() {
         byId('loader-flavor-text').textContent = LOADER_FLAVOR_LINES[flavorIdx];
       }
     );
-    byId('renderer-label').textContent = world.rendererName;
-    byId('map-source').textContent = world.mapSource;
     if (activeMissionId) world.setMission(true, activeMissionId);
   } catch (error) {
     console.error(error);
@@ -1030,7 +1062,6 @@ async function boot3DWorld() {
   }
 }
 
-// Find this function in your src/main.ts:
 function enterGameFromLanding(e?: Event) {
   if (e) e.preventDefault();
   if (!MAP_READY_FOR_PLAY) {
@@ -1052,8 +1083,7 @@ byId('sound-button').addEventListener('click', () => musicEngine.toggle());
 
 document.querySelectorAll<HTMLElement>('[data-trigger="enter-game"]').forEach((btn) => {
   btn.addEventListener('click', (e) => {
-    e.preventDefault();
-    enterGameFromLanding();
+    enterGameFromLanding(e);
   });
 });
 
@@ -1176,4 +1206,5 @@ window.addEventListener('keyup', (event) => {
 void (async function init() {
   void loadProgress();
   await loadCityMap();
+  initTrailerPlayer();
 })();
