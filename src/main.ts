@@ -239,11 +239,8 @@ app.innerHTML = `
       <div class="namma-container prefooter-inner">
         <div class="prefooter-left">
           <div class="social-pills-row">
-            <a href="https://www.instagram.com/_namma_mysore" target="_blank" rel="noreferrer" class="social-pill">◎ Instagram</a>
+            <a href="https://www.instagram.com/_namma_mysore/" target="_blank" rel="noreferrer" class="social-pill">◎ Instagram</a>
             <a href="#section-trailer" class="social-pill">▶ YouTube</a>
-            <a href="https://github.com/Suman-11-web" target="_blank" rel="noreferrer" class="social-pill">𝕏 X</a>
-            <a href="https://thesuman.in" target="_blank" rel="noreferrer" class="social-pill">@ Threads</a>
-            <a href="https://thesuman.in" target="_blank" rel="noreferrer" class="social-pill">f Facebook</a>
           </div>
           <p class="prefooter-question">This is our first draft. Want the full Mysuru game, on PC and phone?</p>
           <button class="btn-vote-full" id="prefooter-vote-btn">Vote for the full version</button>
@@ -305,11 +302,8 @@ app.innerHTML = `
           <div class="footer-follow-col">
             <span class="footer-eyebrow">FOLLOW THE CITY</span>
             <div class="footer-social-squares">
-              <a href="https://www.instagram.com/_namma_mysore" target="_blank" rel="noreferrer" aria-label="Instagram">◎</a>
+              <a href="https://www.instagram.com/_namma_mysore/" target="_blank" rel="noreferrer" aria-label="Instagram">◎</a>
               <a href="#section-trailer" aria-label="YouTube">▶</a>
-              <a href="https://github.com/#" target="_blank" rel="noreferrer" aria-label="X / GitHub">𝕏</a>
-              <a href="https://thesuman.in" target="_blank" rel="noreferrer" aria-label="Threads">@</a>
-              <a href="https://thesuman.in" target="_blank" rel="noreferrer" aria-label="Facebook">f</a>
             </div>
             <p class="footer-contact-line">Something broke? <a href="mailto:sumanofficial.dev@gmail.com">Report a bug</a></p>
             <p class="footer-contact-line">Press and everything else: <a href="mailto:sumanofficial.dev@gmail.com">sumanofficial.dev@gmail.com</a></p>
@@ -693,20 +687,28 @@ function initTrailerPlayer() {
 
   if (!video || !fallbackStage) return;
 
+  // Ensure video is muted so background soundtrack continues playing smoothly
+  video.muted = true;
+  if (soundToggle) soundToggle.textContent = '🔇';
+
   let isVideoPlaying = false;
 
-  const togglePlay = () => {
+  const togglePlay = (e?: Event) => {
+    if (e) e.stopPropagation();
     if (isVideoPlaying) {
       video.pause();
     } else {
-      musicEngine.pause();
       fallbackStage.style.opacity = '0';
       fallbackStage.style.pointerEvents = 'none';
-      void video.play().catch(() => {
+      void video.play().then(() => {
+        isVideoPlaying = true;
+        if (playToggleBtn) playToggleBtn.textContent = '❚❚';
+      }).catch((err) => {
+        console.warn('Video play prevented or trailer.mp4 missing:', err);
         appToast('Trailer file (trailer.mp4) missing in public/assets/');
+        fallbackStage.style.opacity = '1';
+        fallbackStage.style.pointerEvents = 'auto';
       });
-      isVideoPlaying = true;
-      if (playToggleBtn) playToggleBtn.textContent = '❚❚';
     }
   };
 
@@ -719,6 +721,8 @@ function initTrailerPlayer() {
 
   video.addEventListener('pause', () => {
     isVideoPlaying = false;
+    fallbackStage.style.opacity = '1';
+    fallbackStage.style.pointerEvents = 'auto';
     if (playToggleBtn) playToggleBtn.textContent = '▶';
   });
 
@@ -743,19 +747,25 @@ function initTrailerPlayer() {
     if (playToggleBtn) playToggleBtn.textContent = '▶';
   });
 
-  if (centerPlayBtn) centerPlayBtn.addEventListener('click', togglePlay);
-  if (playToggleBtn) playToggleBtn.addEventListener('click', togglePlay);
+  if (centerPlayBtn) {
+    centerPlayBtn.addEventListener('click', togglePlay);
+  }
+  if (playToggleBtn) {
+    playToggleBtn.addEventListener('click', togglePlay);
+  }
   fallbackStage.addEventListener('click', togglePlay);
 
   if (soundToggle) {
-    soundToggle.addEventListener('click', () => {
+    soundToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
       video.muted = !video.muted;
       soundToggle.textContent = video.muted ? '🔇' : '🔊';
     });
   }
 
   if (fullscreenBtn && playerContainer) {
-    fullscreenBtn.addEventListener('click', () => {
+    fullscreenBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
       if (!document.fullscreenElement) {
         void playerContainer.requestFullscreen().catch(() => undefined);
       } else {
